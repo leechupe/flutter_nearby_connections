@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:device_info/device_info.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(MyApp());
@@ -233,8 +235,24 @@ class _DevicesListScreenState extends State<DevicesListScreen> {
           builder: (BuildContext context) {
             final myController = TextEditingController();
             return AlertDialog(
-              title: Text("Send message"),
-              content: TextField(controller: myController),
+              title: Text("Send"),
+              content:
+              Column(
+                  mainAxisSize:MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text("File by Camera.",style: TextStyle(fontSize: 20)),
+                      IconButton(onPressed: (){
+                        _takePhoto(device);
+                      }, icon: Icon(Icons.camera_alt_outlined,size: 48,))
+                    ],
+                  ),
+                  Text("Message",style: TextStyle(fontSize: 20),),
+                  TextField(controller: myController),
+                ],
+              ),
               actions: [
                 TextButton(
                   child: Text("Cancel"),
@@ -254,6 +272,15 @@ class _DevicesListScreenState extends State<DevicesListScreen> {
             );
           });
     }
+  }
+
+
+  void _takePhoto(Device device) async {
+    ImagePicker().getImage(source: ImageSource.camera).then((PickedFile? recordedImage) {
+      if (recordedImage != null) {
+        nearbyService.sendFile(device.deviceId,"${recordedImage.path}");
+      }
+    });
   }
 
   int getItemCount() {
@@ -339,12 +366,24 @@ class _DevicesListScreenState extends State<DevicesListScreen> {
 
     receivedDataSubscription =
         nearbyService.dataReceivedSubscription(callback: (data) {
-      print("dataReceivedSubscription: ${jsonEncode(data)}");
-      showToast(jsonEncode(data),
-          context: context,
-          axis: Axis.horizontal,
-          alignment: Alignment.center,
-          position: StyledToastPosition.bottom);
+          var message = data["message"];
+          if(message is Uint8List) {
+            print("dataReceivedSubscription received a file");
+            showToast("received a file",
+                context: context,
+                axis: Axis.horizontal,
+                alignment: Alignment.center,
+                position: StyledToastPosition.bottom);
+          }else{
+            print("dataReceivedSubscription: ${jsonEncode(data)}");
+            showToast(jsonEncode(data),
+                context: context,
+                axis: Axis.horizontal,
+                alignment: Alignment.center,
+                position: StyledToastPosition.bottom);
+          }
+
+
     });
   }
 }

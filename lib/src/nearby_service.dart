@@ -8,8 +8,10 @@ const _stopBrowsingForPeers = 'stop_browsing_for_peers';
 const _invitePeer = 'invite_peer';
 const _disconnectPeer = 'disconnect_peer';
 const _sendMessage = 'send_message';
+const _sendFile = 'send_file';
 const _invokeChangeStateMethod = "invoke_change_state_method";
 const _invokeMessageReceiveMethod = "invoke_message_receive_method";
+const _invokeMessageReceiveByteMethod = "invoke_message_receive_byte_method";
 const _invokeNearbyRunning = "nearby_running";
 
 /// [StateChangedCallback] is used to call back an object under List<Device>.
@@ -71,6 +73,10 @@ class NearbyService {
           _dataReceivedController.add(handler.arguments);
           debugPrint(
               "_invokeMessageReceiveMethod | arguments: ${handler.arguments}");
+          break;
+        case _invokeMessageReceiveByteMethod:
+          _dataReceivedController.add(handler.arguments);
+          debugPrint("_invokeMessageReceiveByteMethod | arguments: ${handler.arguments}");
           break;
         case _invokeNearbyRunning:
           await Future.delayed(Duration(seconds: 1));
@@ -163,6 +169,16 @@ class NearbyService {
       'deviceId': deviceID,
       if (_deviceName != null) 'senderDeviceId': _deviceName,
       'message': message,
+    });
+  }
+
+  /// Sends a file path encapsulated in a Data instance to nearby peers.
+  FutureOr<dynamic> sendFile(String deviceID, dynamic filePath) async
+  {
+    await _channel.invokeMethod(_sendFile, <String, dynamic>{
+      'deviceId': deviceID,
+      if (_deviceName != null) 'senderDeviceId': _deviceName,
+      'filePath': filePath,
     });
   }
 

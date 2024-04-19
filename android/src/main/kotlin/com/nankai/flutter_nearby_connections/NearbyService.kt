@@ -16,6 +16,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
+import java.io.File
 
 
 const val NOTIFICATION_ID = 101
@@ -49,6 +50,13 @@ class NearbyService : Service() {
     fun sendStringPayload(endpointId: String, str: String) {
         Log.d(TAG, "sendStringPayload $endpointId -> $str")
         connectionsClient.sendPayload(endpointId, Payload.fromBytes(str.toByteArray()))
+    }
+
+    fun sendFilePayload(endpointId: String,filePath:String)
+    {
+        Log.d(TAG, "sendFilePayload $endpointId -> $filePath")
+        var filePng  = File(filePath)
+        connectionsClient.sendPayload(endpointId,  Payload.fromFile(filePng))
     }
 
     fun startAdvertising(strategy: Strategy, deviceName: String) {

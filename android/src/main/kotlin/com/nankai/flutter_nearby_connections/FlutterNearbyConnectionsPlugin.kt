@@ -35,9 +35,11 @@ const val invitePeer = "invite_peer"
 const val disconnectPeer = "disconnect_peer"
 
 const val sendMessage = "send_message"
+const val sendFile = "send_file"
 
 const val INVOKE_CHANGE_STATE_METHOD = "invoke_change_state_method"
 const val INVOKE_MESSAGE_RECEIVE_METHOD = "invoke_message_receive_method"
+const val INVOKE_MESSAGE_RECEIVE_BYTE_METHOD = "invoke_message_receive_byte_method"
 
 const val NEARBY_RUNNING = "nearby_running"
 
@@ -130,6 +132,12 @@ class FlutterNearbyConnectionsPlugin : FlutterPlugin, MethodCallHandler, Activit
                 val deviceId = call.argument<String>("deviceId")
                 val message = call.argument<String>("message")
                 serviceBindManager.mService?.sendStringPayload(deviceId!!, message!!)
+            }
+            sendFile -> {
+                Log.d("nearby_connections", "sendFile")
+                val deviceId = call.argument<String>("deviceId")
+                val message = call.argument<String>("filePath")
+                message?.let { serviceBindManager.mService?.sendFilePayload(deviceId!!, it) }
             }
         }
     }

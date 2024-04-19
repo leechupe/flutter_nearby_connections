@@ -6,6 +6,7 @@ import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import com.google.gson.Gson
 import io.flutter.plugin.common.MethodChannel
+import java.io.File
 
 const val connecting = 1
 const val connected = 2
@@ -61,8 +62,14 @@ class CallbackUtils constructor(private val channel: MethodChannel, private val 
     private val payloadCallback: PayloadCallback = object : PayloadCallback() {
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
             Log.d("nearby_connections", "onPayloadReceived $endpointId")
-            val args = mutableMapOf("deviceId" to endpointId, "message" to String(payload.asBytes()!!))
-            channel.invokeMethod(INVOKE_MESSAGE_RECEIVE_METHOD, args)
+            if(payload.type == Payload.Type.FILE){
+                val file: File? = payload.asFile()?.asJavaFile()
+                val args = mutableMapOf("deviceId" to endpointId, "message" to file?.readBytes()!!)
+                channel.invokeMethod(INVOKE_MESSAGE_RECEIVE_BYTE_METHOD, args)
+            }else{
+                val args = mutableMapOf("deviceId" to endpointId, "message" to String(payload.asBytes()!!))
+                channel.invokeMethod(INVOKE_MESSAGE_RECEIVE_METHOD, args)
+            }
         }
 
         override fun onPayloadTransferUpdate(endpointId: String,

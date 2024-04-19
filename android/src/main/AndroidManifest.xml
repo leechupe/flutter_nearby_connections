@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nankai.flutter_nearby_connections">
+    >
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -21,7 +21,7 @@
 
     <application>
         <service
-            android:name=".NearbyService"
+            android:name="com.nankai.flutter_nearby_connections.NearbyService"
             android:enabled="true"
             android:exported="false"/>
 
