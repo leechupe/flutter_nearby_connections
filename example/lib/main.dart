@@ -320,7 +320,7 @@ class _DevicesListScreenState extends State<DevicesListScreen> {
       devInfo = iosInfo.localizedModel;
     }
     await nearbyService.init(
-        serviceType: 'mpconn',
+        serviceType: 'mp-connection',
         deviceName: devInfo,
         strategy: Strategy.P2P_CLUSTER,
         callback: (isRunning) async {
@@ -368,7 +368,7 @@ class _DevicesListScreenState extends State<DevicesListScreen> {
         nearbyService.dataReceivedSubscription(callback: (data) {
           var message = data["message"];
           if(message is Uint8List) {
-            print("dataReceivedSubscription received a file");
+            ///Save the file by your use case
             showToast("received a file",
                 context: context,
                 axis: Axis.horizontal,
