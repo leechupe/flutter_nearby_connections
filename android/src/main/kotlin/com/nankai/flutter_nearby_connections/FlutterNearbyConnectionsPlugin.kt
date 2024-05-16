@@ -30,6 +30,7 @@ const val startBrowsingForPeers = "start_browsing_for_peers"
 
 const val stopAdvertisingPeer = "stop_advertising_peer"
 const val stopBrowsingForPeers = "stop_browsing_for_peers"
+const val stopAllEndpoints = "stop_all_endpoints"
 
 const val invitePeer = "invite_peer"
 const val disconnectPeer = "disconnect_peer"
@@ -125,6 +126,11 @@ class FlutterNearbyConnectionsPlugin : FlutterPlugin, MethodCallHandler, Activit
                 val deviceId = call.argument<String>("deviceId")
                 serviceBindManager.mService?.disconnect(deviceId!!)
                 callbackUtils.updateStatus(deviceId = deviceId!!, state = notConnected)
+                result.success(true)
+            }
+            stopAllEndpoints -> {
+                Log.d("nearby_connections", "stopAllEndpoints")
+                serviceBindManager.mService?.stopAllEndpoints()
                 result.success(true)
             }
             sendMessage -> {
