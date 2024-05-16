@@ -99,6 +99,11 @@ class NearbyService : Service() {
         )
     }
 
+    fun stopAllEndpoints()
+    {
+        connectionsClient.stopAllEndpoints();
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         stopAdvertising()

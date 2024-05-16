@@ -5,6 +5,7 @@ const _startAdvertisingPeer = 'start_advertising_peer';
 const _stopAdvertisingPeer = 'stop_advertising_peer';
 const _startBrowsingForPeers = 'start_browsing_for_peers';
 const _stopBrowsingForPeers = 'stop_browsing_for_peers';
+const _stopAllEndpoints = "stop_all_endpoints";
 const _invitePeer = 'invite_peer';
 const _disconnectPeer = 'disconnect_peer';
 const _sendMessage = 'send_message';
@@ -140,6 +141,10 @@ class NearbyService {
   /// Stops browsing for peers.
   FutureOr<dynamic> stopBrowsingForPeers() async {
     await _channel.invokeMethod(_stopBrowsingForPeers);
+  }
+
+  FutureOr<dynamic> stopAllEndpoints() async {
+    await _channel.invokeMethod(_stopAllEndpoints);
   }
 
   /// Invites a discovered peer to join a nearby connections session.
