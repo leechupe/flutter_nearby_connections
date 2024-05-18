@@ -15,7 +15,6 @@ enum MethodCall: String {
     
     case stopAdvertisingPeer = "stop_advertising_peer"
     case stopBrowsingForPeers = "stop_browsing_for_peers"
-    case stopAllEndpoints = "stop_all_endpoints"
 
     case invitePeer = "invite_peer"
     case disconnectPeer = "disconnect_peer"
@@ -138,8 +137,6 @@ public class SwiftFlutterNearbyConnectionsPlugin: NSObject, FlutterPlugin {
         case .stopBrowsingForPeers:
             MPCManager.instance.stopBrowsingForPeers()
             result(true)
-        case .stopAllEndpoints:
-            MPCManager.instance.
         case .invitePeer:
             guard let data = call.arguments as? Dictionary<String, AnyObject> else {
                 result(false)
